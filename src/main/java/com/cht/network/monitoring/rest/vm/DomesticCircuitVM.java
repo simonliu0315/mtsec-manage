@@ -11,10 +11,16 @@ public class DomesticCircuitVM {
             "列表包含項次(rowCount)、素材名稱(name)、素材描述(description)、最新版次(maxResVerCreated)、最新版本日期(maxResVer)"
     )
     public static class FindAllReq {
-        @Schema(description = "request參數1: 輸入之素材名稱")
+        @Schema(description = "request參數1: 輸入之關鍵字")
         private String filter;
 
+        public String getFilter() {
+            return filter;
+        }
 
+        public void setFilter(String filter) {
+            this.filter = filter;
+        }
     }
 
     @Schema(description = "素材管理查詢任務Request" +

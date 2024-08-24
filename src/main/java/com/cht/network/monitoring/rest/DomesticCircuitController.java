@@ -35,7 +35,7 @@ public class DomesticCircuitController {
     public @ResponseBody ResponseEntity<DomesticCircuitVM.FindAllRes> findAllRes(@Valid @RequestBody DomesticCircuitVM.FindAllReq findAllReq,
                                                                                  @ParameterObject Pageable page, HttpServletResponse response) {
         //response.addHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-        log.info("AAAAAAAAAAAAAAAAAAAAAA");
+        log.info("AAAAAAAAAAAAAAAAAAAAAA {}", page);
         Page<DomesticCircuitDto> findAllPage = domesticCircuitService.findAll("",page);
         DomesticCircuitVM.FindAllRes res = new DomesticCircuitVM.FindAllRes();
         res.setDomesticCircuitDto(findAllPage);

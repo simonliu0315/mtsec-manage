@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class DomesticCircuitDto {
 
+    private String warnLevel;
     private String deviceId;
     private String deviceName;
     private String deviceInterface;
@@ -12,6 +13,14 @@ public class DomesticCircuitDto {
     private long inputUsage;
     private long outputUsage;
     private String remarks;
+
+    public String getWarnLevel() {
+        return warnLevel;
+    }
+
+    public void setWarnLevel(String warnLevel) {
+        this.warnLevel = warnLevel;
+    }
 
     public String getDeviceId() {
         return deviceId;
