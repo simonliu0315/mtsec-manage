@@ -2,6 +2,7 @@ package com.cht.network.monitoring.service;
 
 import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.dto.DomesticCircuitDto;
+import com.cht.network.monitoring.dto.InventoryDto;
 import com.cht.network.monitoring.repository.InventoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,37 +13,35 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
-public class DomesticCircuitService {
+public class InventoryService {
 
-    private static final Logger log = LoggerFactory.getLogger(DomesticCircuitService.class);
+    private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
 
     private final InventoryRepository inventoryRepository;
 
-    public DomesticCircuitService(InventoryRepository inventoryRepository) {
+    public InventoryService(InventoryRepository inventoryRepository) {
         this.inventoryRepository = inventoryRepository;
     }
 
-    public Page<DomesticCircuitDto> findAll(String filter, Pageable pageable) {
+    public Page<InventoryDto> findAll(String filter, Pageable pageable) {
 
         log.info("findAll");
         Pageable firstPageWithTwoElements = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Inventory> page = inventoryRepository.findAll(firstPageWithTwoElements);
-        List<DomesticCircuitDto> dtos = new ArrayList<>();
+        List<InventoryDto> dtos = new ArrayList<>();
         for(Inventory inventory : page) {
-            DomesticCircuitDto domesticCircuitDto = new DomesticCircuitDto();
-            domesticCircuitDto.setWarnLevel("danger");
-            domesticCircuitDto.setDeviceId(String.valueOf(inventory.getId()));
-            domesticCircuitDto.setDeviceName(inventory.getDeviceName());
-            domesticCircuitDto.setDeviceInterface(inventory.getDeviceInterface());
-            domesticCircuitDto.setInterfaceDescription(inventory.getInterfaceDescription());
-            dtos.add(domesticCircuitDto);
+            InventoryDto inventoryDto = new InventoryDto();
+            inventoryDto.setId(inventory.getId());
+            inventoryDto.setDeviceName(inventory.getDeviceName());
+            inventoryDto.setDeviceInterface(inventory.getDeviceInterface());
+            inventoryDto.setInterfaceDescription(inventory.getInterfaceDescription());
+            dtos.add(inventoryDto);
 
             log.info("{}", inventory);
         }
-        return new PageImpl<DomesticCircuitDto>(dtos, pageable, page.getTotalElements());
+        return new PageImpl<InventoryDto>(dtos, pageable, page.getTotalElements());
     }
 }
