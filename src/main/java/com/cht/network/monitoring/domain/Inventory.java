@@ -9,21 +9,23 @@ import jakarta.persistence.*;
 public class Inventory {
 
     @Id
-    @Column(name = "id", nullable = false, length = 20)
-    private int id;
+    @Column(name = "id", nullable = false, length = 100)
+    private String id;
 
     @Column(name = "device_name")
     private String deviceName;
+
     @Column(name = "device_interface")
     private String deviceInterface;
+
     @Column(name = "interface_description")
     private String interfaceDescription;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -1,5 +1,6 @@
 package com.cht.network.monitoring.rest;
 
+import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.dto.DomesticCircuitDto;
 import com.cht.network.monitoring.dto.InventoryDto;
 import com.cht.network.monitoring.rest.vm.DomesticCircuitVM;
@@ -40,6 +41,47 @@ public class InventoryController {
         Page<InventoryDto> findAllPage = inventoryService.findAll("",page);
         InventoryVM.FindAllRes res = new InventoryVM.FindAllRes();
         res.setInventoryDto(findAllPage);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @Operation(summary = "取得資產")
+    @PostMapping(value = "/find/one", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> findOneRes(@Valid @RequestBody InventoryVM.FindOneReq findOneReq,
+                                                                           HttpServletResponse response) {
+
+        log.info("findOneRes {}", findOneReq.getId());
+        InventoryDto dto = inventoryService.findOne(findOneReq.getId(), "");
+        InventoryVM.FindOneRes res = new InventoryVM.FindOneRes();
+        res.setInventoryDto(dto);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @Operation(summary = "修改資產")
+    @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> update(@Valid @RequestBody InventoryVM.UpdateOneReq updateOneReq,
+                                                                           HttpServletResponse response) {
+
+        log.info("update {}", updateOneReq);
+        Inventory inventory = inventoryService.save(updateOneReq.getId(),
+                updateOneReq.getDeviceName(),
+                updateOneReq.getDeviceInterface(),
+                updateOneReq.getInterfaceDescription());
+        InventoryVM.FindOneRes res = new InventoryVM.FindOneRes();
+        res.setInventoryDto(null);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @Operation(summary = "刪除資產")
+    @PostMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> deleteOne(@Valid @RequestBody InventoryVM.DeleteOneReq deleteOneReq,
+                                                                          HttpServletResponse response) {
+
+        log.info("deleteOneReq {}", deleteOneReq);
+        inventoryService.delete(deleteOneReq.getId());
+        InventoryVM.FindOneRes res = new InventoryVM.FindOneRes();
         return ResponseEntity.ok().body(res);
     }
 }

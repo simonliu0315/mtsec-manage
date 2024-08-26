@@ -1,6 +1,6 @@
 package com.cht.network.monitoring.rest.vm;
 
-import com.cht.network.monitoring.dto.DomesticCircuitDto;
+import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.dto.InventoryDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;
@@ -40,5 +40,40 @@ public class InventoryVM extends InventoryDto {
         public void setInventoryDto(Page<InventoryDto> inventoryDto) {
             this.inventoryDto = inventoryDto;
         }
+    }
+
+    public static class FindOneReq {
+
+        @Schema(description = "")
+        private String id;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+    }
+    public static class FindOneRes {
+
+        @Schema(description = "")
+        private InventoryDto inventoryDto;
+
+        public InventoryDto getInventoryDto() {
+            return inventoryDto;
+        }
+
+        public void setInventoryDto(InventoryDto inventoryDto) {
+            this.inventoryDto = inventoryDto;
+        }
+    }
+
+    public static class UpdateOneReq extends Inventory {
+
+    }
+
+    public static class DeleteOneReq extends Inventory {
+
     }
 }
