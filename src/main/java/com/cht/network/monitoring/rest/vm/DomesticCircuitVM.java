@@ -40,4 +40,115 @@ public class DomesticCircuitVM {
             this.domesticCircuitDto = domesticCircuitDto;
         }
     }
+
+    public static class FindEventReq {
+        @Schema(description = "request參數1: 輸入之關鍵字")
+        private String filter;
+
+        public String getFilter() {
+            return filter;
+        }
+
+        public void setFilter(String filter) {
+            this.filter = filter;
+        }
+
+    }
+    public static class FindEventRes {
+
+        private int normalCnt;
+
+        private int minorCnt;
+
+        private int criticalCnt;
+
+        public int getMinorCnt() {
+            return minorCnt;
+        }
+
+        public void setMinorCnt(int minorCnt) {
+            this.minorCnt = minorCnt;
+        }
+
+        public int getNormalCnt() {
+            return normalCnt;
+        }
+
+        public void setNormalCnt(int normalCnt) {
+            this.normalCnt = normalCnt;
+        }
+
+        public int getCriticalCnt() {
+            return criticalCnt;
+        }
+
+        public void setCriticalCnt(int criticalCnt) {
+            this.criticalCnt = criticalCnt;
+        }
+    }
+
+    public static class FindEventHistoryReq {
+        @Schema(description = "request參數1: 輸入之關鍵字")
+        private String filter;
+
+        private int timeInterval;
+
+        public String getFilter() {
+            return filter;
+        }
+
+        public void setFilter(String filter) {
+            this.filter = filter;
+        }
+
+        public int getTimeInterval() {
+            return timeInterval;
+        }
+
+        public void setTimeInterval(int timeInterval) {
+            this.timeInterval = timeInterval;
+        }
+    }
+    public static class FindEventHistoryRes {
+
+        private String[] checkTime;
+
+        private int[] normalCnt;
+
+        private int[] minorCnt;
+
+        private int[] criticalCnt;
+
+        public String[] getCheckTime() {
+            return checkTime;
+        }
+
+        public void setCheckTime(String[] checkTime) {
+            this.checkTime = checkTime;
+        }
+
+        public int[] getNormalCnt() {
+            return normalCnt;
+        }
+
+        public void setNormalCnt(int[] normalCnt) {
+            this.normalCnt = normalCnt;
+        }
+
+        public int[] getMinorCnt() {
+            return minorCnt;
+        }
+
+        public void setMinorCnt(int[] minorCnt) {
+            this.minorCnt = minorCnt;
+        }
+
+        public int[] getCriticalCnt() {
+            return criticalCnt;
+        }
+
+        public void setCriticalCnt(int[] criticalCnt) {
+            this.criticalCnt = criticalCnt;
+        }
+    }
 }

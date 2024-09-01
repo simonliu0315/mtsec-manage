@@ -75,7 +75,11 @@ public class InventoryService {
             return inventoryRepository.save(inventory);
 
         } else {
-            Inventory inventory = new Inventory();
+
+            InventoryPK pk = new InventoryPK();
+            pk.setId(id);
+            Inventory inventory= inventoryRepository.findById(pk).get();
+
             inventory.setId(id);
             inventory.setDeviceName(deviceName);
             inventory.setDeviceInterface(deviceInterface);

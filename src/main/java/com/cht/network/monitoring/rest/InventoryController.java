@@ -1,11 +1,8 @@
 package com.cht.network.monitoring.rest;
 
 import com.cht.network.monitoring.domain.Inventory;
-import com.cht.network.monitoring.dto.DomesticCircuitDto;
 import com.cht.network.monitoring.dto.InventoryDto;
-import com.cht.network.monitoring.rest.vm.DomesticCircuitVM;
 import com.cht.network.monitoring.rest.vm.InventoryVM;
-import com.cht.network.monitoring.service.DomesticCircuitService;
 import com.cht.network.monitoring.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +31,7 @@ public class InventoryController {
     @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "取得資產")
     @PostMapping(value = "/find/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<InventoryVM.FindAllRes> findAllRes(@Valid @RequestBody InventoryVM.FindAllReq findAllReq,
+    public @ResponseBody ResponseEntity<InventoryVM.FindAllRes> findAllInventory(@Valid @RequestBody InventoryVM.FindAllReq findAllReq,
                                                                                  @ParameterObject Pageable page, HttpServletResponse response) {
         //response.addHeader("Access-Control-Allow-Origin", "http://localhost:5173");
 
@@ -47,7 +44,7 @@ public class InventoryController {
     @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "取得資產")
     @PostMapping(value = "/find/one", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> findOneRes(@Valid @RequestBody InventoryVM.FindOneReq findOneReq,
+    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> findOneInventory(@Valid @RequestBody InventoryVM.FindOneReq findOneReq,
                                                                            HttpServletResponse response) {
 
         log.info("findOneRes {}", findOneReq.getId());
@@ -60,7 +57,7 @@ public class InventoryController {
     @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "修改資產")
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> update(@Valid @RequestBody InventoryVM.UpdateOneReq updateOneReq,
+    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> updateInventory(@Valid @RequestBody InventoryVM.UpdateOneReq updateOneReq,
                                                                            HttpServletResponse response) {
 
         log.info("update {}", updateOneReq);
@@ -76,7 +73,7 @@ public class InventoryController {
     @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "刪除資產")
     @PostMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> deleteOne(@Valid @RequestBody InventoryVM.DeleteOneReq deleteOneReq,
+    public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> deleteOneInventory(@Valid @RequestBody InventoryVM.DeleteOneReq deleteOneReq,
                                                                           HttpServletResponse response) {
 
         log.info("deleteOneReq {}", deleteOneReq);
