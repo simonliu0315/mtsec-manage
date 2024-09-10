@@ -1,8 +1,8 @@
-package com.cht.network.monitoring.rest;
+package com.cht.network.monitoring.web.rest;
 
 import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.dto.InventoryDto;
-import com.cht.network.monitoring.rest.vm.InventoryVM;
+import com.cht.network.monitoring.web.rest.vm.InventoryVM;
 import com.cht.network.monitoring.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("inventory")
-public class InventoryController {
+public class InventoryResource {
 
-    private static final Logger log = LoggerFactory.getLogger(InventoryController.class);
+    private static final Logger log = LoggerFactory.getLogger(InventoryResource.class);
 
     private final InventoryService inventoryService;
 
-    public InventoryController(InventoryService inventoryService) {
+    public InventoryResource(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    //@CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "取得資產")
     @PostMapping(value = "/find/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<InventoryVM.FindAllRes> findAllInventory(@Valid @RequestBody InventoryVM.FindAllReq findAllReq,
@@ -41,7 +41,6 @@ public class InventoryController {
         return ResponseEntity.ok().body(res);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "取得資產")
     @PostMapping(value = "/find/one", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> findOneInventory(@Valid @RequestBody InventoryVM.FindOneReq findOneReq,
@@ -54,7 +53,6 @@ public class InventoryController {
         return ResponseEntity.ok().body(res);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "修改資產")
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> updateInventory(@Valid @RequestBody InventoryVM.UpdateOneReq updateOneReq,
@@ -70,7 +68,6 @@ public class InventoryController {
         return ResponseEntity.ok().body(res);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "刪除資產")
     @PostMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<InventoryVM.FindOneRes> deleteOneInventory(@Valid @RequestBody InventoryVM.DeleteOneReq deleteOneReq,

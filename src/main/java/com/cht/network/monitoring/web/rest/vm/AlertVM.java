@@ -1,4 +1,4 @@
-package com.cht.network.monitoring.rest.vm;
+package com.cht.network.monitoring.web.rest.vm;
 
 import java.util.Arrays;
 import java.util.Date;

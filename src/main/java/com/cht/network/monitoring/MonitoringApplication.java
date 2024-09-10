@@ -1,6 +1,5 @@
 package com.cht.network.monitoring;
 
-import com.cht.network.monitoring.rest.AlertReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

@@ -2,10 +2,8 @@ package com.cht.network.monitoring.service;
 
 import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.domain.InventoryPK;
-import com.cht.network.monitoring.dto.DomesticCircuitDto;
 import com.cht.network.monitoring.dto.InventoryDto;
 import com.cht.network.monitoring.repository.InventoryRepository;
-import com.cht.network.monitoring.rest.vm.InventoryVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

@@ -1,14 +1,12 @@
-package com.cht.network.monitoring.rest;
+package com.cht.network.monitoring.web.rest;
 
-import com.cht.network.monitoring.rest.vm.AlertVM;
+import com.cht.network.monitoring.web.rest.vm.AlertVM;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;

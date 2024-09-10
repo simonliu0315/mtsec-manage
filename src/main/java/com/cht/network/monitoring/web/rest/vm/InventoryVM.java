@@ -1,4 +1,4 @@
-package com.cht.network.monitoring.rest.vm;
+package com.cht.network.monitoring.web.rest.vm;
 
 import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.dto.InventoryDto;

@@ -1,4 +1,4 @@
-package com.cht.network.monitoring.rest;
+package com.cht.network.monitoring.web.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

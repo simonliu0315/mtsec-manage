@@ -1,8 +1,6 @@
-package com.cht.network.monitoring.rest.vm;
+package com.cht.network.monitoring.web.rest.vm;
 
-import com.cht.network.monitoring.domain.Inventory;
 import com.cht.network.monitoring.domain.OperationTeam;
-import com.cht.network.monitoring.dto.InventoryDto;
 import com.cht.network.monitoring.dto.OperationTeamDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;

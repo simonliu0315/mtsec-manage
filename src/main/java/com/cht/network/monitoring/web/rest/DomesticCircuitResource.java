@@ -1,20 +1,21 @@
-package com.cht.network.monitoring.rest;
+package com.cht.network.monitoring.web.rest;
 
+import com.cht.network.monitoring.StatusCodes;
 import com.cht.network.monitoring.domain.EventStatistics;
 import com.cht.network.monitoring.dto.DomesticCircuitDto;
 import com.cht.network.monitoring.dto.EventLogCnt;
-import com.cht.network.monitoring.rest.vm.DomesticCircuitVM;
+import com.cht.network.monitoring.statuscode.StatusCode;
+import com.cht.network.monitoring.web.rest.vm.DomesticCircuitVM;
+import com.cht.network.monitoring.web.util.HeaderUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -23,34 +24,33 @@ import com.cht.network.monitoring.service.DomesticCircuitService;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("domesticCircuit")
-public class DomesticCircuitController {
+public class DomesticCircuitResource {
 
-    private static final Logger log = LoggerFactory.getLogger(DomesticCircuitController.class);
+    private static final Logger log = LoggerFactory.getLogger(DomesticCircuitResource.class);
 
     private final DomesticCircuitService domesticCircuitService;
 
-    public DomesticCircuitController(DomesticCircuitService domesticCircuitService) {
+    public DomesticCircuitResource(DomesticCircuitService domesticCircuitService) {
         this.domesticCircuitService = domesticCircuitService;
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    //@CrossOrigin(origins = "http://localhost:5173", exposedHeaders = {"Authorization","x-network-traceid","x-network-alert","x-network-params","x-network-dismiss-alert","content-disposition"})
     @Operation(summary = "取得素材清單")
     @PostMapping(value = "/find/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<DomesticCircuitVM.FindAllRes> findAllRes(@Valid @RequestBody DomesticCircuitVM.FindAllReq findAllReq,
                                                                                  @ParameterObject Pageable page, HttpServletResponse response) {
 
         log.info("findAllRes {}  {}", findAllReq.getFilter(),page);
+
         Page<DomesticCircuitDto> findAllPage = domesticCircuitService.findAll(findAllReq.getFilter(), page);
         DomesticCircuitVM.FindAllRes res = new DomesticCircuitVM.FindAllRes();
         res.setDomesticCircuitDto(findAllPage);
         return ResponseEntity.ok().body(res);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @Operation(summary = "取得素材清單")
     @PostMapping(value = "/find/eventCnt", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<DomesticCircuitVM.FindEventRes> findEventCnt(@Valid @RequestBody DomesticCircuitVM.FindEventReq findEventReq,
@@ -74,8 +74,7 @@ public class DomesticCircuitController {
         return ResponseEntity.ok().body(res);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
-    @Operation(summary = "取得素材清單")
+   @Operation(summary = "取得素材清單")
     @PostMapping(value = "/find/eventCntHistory", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<DomesticCircuitVM.FindEventHistoryRes> findEventCntHistory(@Valid @RequestBody DomesticCircuitVM.FindEventHistoryReq findEventHistoryReq,
                                                                                      HttpServletResponse response) {
@@ -95,6 +94,7 @@ public class DomesticCircuitController {
         res.setMinorCnt(eventStatistics.stream().mapToInt(EventStatistics::getMinorCount).unordered().toArray());
         res.setNormalCnt(eventStatistics.stream().mapToInt(EventStatistics::getNormalCount).unordered().toArray());
 
-        return ResponseEntity.ok().body(res);
+        //return ResponseEntity.ok().headers(HeaderUtils.createAlert("APP-APP001I-0001-S")).body(res);
+       return ResponseEntity.ok().headers(HeaderUtils.createAlert(StatusCodes.APP_APP001I_0001_I())).body(res);
     }
 }
