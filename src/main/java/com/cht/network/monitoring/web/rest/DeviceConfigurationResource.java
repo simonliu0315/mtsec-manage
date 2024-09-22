@@ -6,6 +6,7 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -19,15 +20,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 
+@Tag(name = "DeviceConfiguration", description = "設備組態設定")
 @RestController
-@RequestMapping("deviceConfiguration")
+@RequestMapping("api/deviceConfiguration")
 public class DeviceConfigurationResource {
 
     private static final Logger log = LoggerFactory.getLogger(DeviceConfigurationResource.class);
 
     @Operation(summary = "取得素材清單")
     @PostMapping(value = "/find/diff", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<DeviceConfigurationVM.FindDiffRes> findDiff(@Valid @RequestBody DomesticCircuitVM.FindAllReq findAllReq,
+    public @ResponseBody ResponseEntity<DeviceConfigurationVM.FindDiffRes> findDeviceConfigurationDiff(@Valid @RequestBody DomesticCircuitVM.FindAllReq findAllReq,
                                                                                  @ParameterObject Pageable page, HttpServletResponse response) {
 
         log.info("findAllRes {}  {}", findAllReq.getFilter(),page);

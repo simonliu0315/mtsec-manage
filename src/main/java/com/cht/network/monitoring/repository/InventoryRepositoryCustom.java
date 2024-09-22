@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface InventoryRepositoryCustom {
 
-    public Page<InventoryEventLogDto> getInventoryAndEventLog(String filter, String type,
+    public Page<InventoryEventLogDto> getInventoryAndEventLog(String filter, String transactionType,
                                                               Pageable pageable);
 
-    public List<EventLogCnt> findEventLogCnt(String filter, String type);
+    public List<EventLogCnt> findEventLogCnt(String filter, String transactionType);
 }

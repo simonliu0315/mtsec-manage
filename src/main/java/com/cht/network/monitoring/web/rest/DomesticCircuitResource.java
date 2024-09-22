@@ -8,6 +8,7 @@ import com.cht.network.monitoring.statuscode.StatusCode;
 import com.cht.network.monitoring.web.rest.vm.DomesticCircuitVM;
 import com.cht.network.monitoring.web.util.HeaderUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -25,8 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
 
+@Tag(name = "DomesticCircuit", description = "國內骨幹電路")
 @RestController
-@RequestMapping("domesticCircuit")
+@RequestMapping("api/domesticCircuit")
 public class DomesticCircuitResource {
 
     private static final Logger log = LoggerFactory.getLogger(DomesticCircuitResource.class);
@@ -38,9 +40,9 @@ public class DomesticCircuitResource {
     }
 
     //@CrossOrigin(origins = "http://localhost:5173", exposedHeaders = {"Authorization","x-network-traceid","x-network-alert","x-network-params","x-network-dismiss-alert","content-disposition"})
-    @Operation(summary = "取得素材清單")
+    @Operation(summary = "國內骨幹電路-取得所有設備")
     @PostMapping(value = "/find/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<DomesticCircuitVM.FindAllRes> findAllRes(@Valid @RequestBody DomesticCircuitVM.FindAllReq findAllReq,
+    public @ResponseBody ResponseEntity<DomesticCircuitVM.FindAllRes> findDomesticCircuitAllRes(@Valid @RequestBody DomesticCircuitVM.FindAllReq findAllReq,
                                                                                  @ParameterObject Pageable page, HttpServletResponse response) {
 
         log.info("findAllRes {}  {}", findAllReq.getFilter(),page);
@@ -51,9 +53,9 @@ public class DomesticCircuitResource {
         return ResponseEntity.ok().body(res);
     }
 
-    @Operation(summary = "取得素材清單")
+    @Operation(summary = "國內骨幹電路-取得事件總計")
     @PostMapping(value = "/find/eventCnt", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<DomesticCircuitVM.FindEventRes> findEventCnt(@Valid @RequestBody DomesticCircuitVM.FindEventReq findEventReq,
+    public @ResponseBody ResponseEntity<DomesticCircuitVM.FindEventRes> findDomesticCircuitEventCnt(@Valid @RequestBody DomesticCircuitVM.FindEventReq findEventReq,
                                                                                  HttpServletResponse response) {
 
         log.info("findEventReq {}  ", findEventReq.getFilter());
@@ -74,9 +76,9 @@ public class DomesticCircuitResource {
         return ResponseEntity.ok().body(res);
     }
 
-   @Operation(summary = "取得素材清單")
+   @Operation(summary = "國內骨幹電路-取得事件歷史資料")
     @PostMapping(value = "/find/eventCntHistory", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<DomesticCircuitVM.FindEventHistoryRes> findEventCntHistory(@Valid @RequestBody DomesticCircuitVM.FindEventHistoryReq findEventHistoryReq,
+   public @ResponseBody ResponseEntity<DomesticCircuitVM.FindEventHistoryRes> findDomesticCircuitEventCntHistory(@Valid @RequestBody DomesticCircuitVM.FindEventHistoryReq findEventHistoryReq,
                                                                                      HttpServletResponse response) {
 
         log.info("findEventCntHistory {} , interval {}", findEventHistoryReq.getFilter(), findEventHistoryReq.getTimeInterval());
@@ -95,6 +97,6 @@ public class DomesticCircuitResource {
         res.setNormalCnt(eventStatistics.stream().mapToInt(EventStatistics::getNormalCount).unordered().toArray());
 
         //return ResponseEntity.ok().headers(HeaderUtils.createAlert("APP-APP001I-0001-S")).body(res);
-       return ResponseEntity.ok().headers(HeaderUtils.createAlert(StatusCodes.APP_APP001I_0001_I())).body(res);
+       return ResponseEntity.ok().headers(HeaderUtils.createAlert(StatusCodes.NET_SELECT_0001_S())).body(res);
     }
 }

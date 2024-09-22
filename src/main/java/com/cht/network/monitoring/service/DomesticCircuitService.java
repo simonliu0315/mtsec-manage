@@ -49,7 +49,7 @@ public class DomesticCircuitService {
         //Page<Inventory> page = inventoryRepository.findInventoryByDeviceNameIsContainingOrDeviceInterfaceIsContainingOrInterfaceDescriptionIsContaining(filter,
         //        filter, filter, firstPageWithTwoElements);
         Page<InventoryEventLogDto> page = inventoryRepository.getInventoryAndEventLog(filter, "Traffic", firstPageWithTwoElements);
-                List<DomesticCircuitDto> dtos = new ArrayList<>();
+        List<DomesticCircuitDto> dtos = new ArrayList<>();
         for(InventoryEventLogDto inventory : page) {
             DomesticCircuitDto domesticCircuitDto = new DomesticCircuitDto();
             domesticCircuitDto.setWarnLevel(inventory.getLevel());

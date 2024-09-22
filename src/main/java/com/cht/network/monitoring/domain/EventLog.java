@@ -17,8 +17,11 @@ public class EventLog {
     @Column(name = "level")
     private String level;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "transaction_type")
+    private String transactionType;
+
+    @Column(name = "access_type")
+    private String accessType;
 
     @Column(name = "device_id")
     private String deviceId;
@@ -72,12 +75,20 @@ public class EventLog {
         this.level = level;
     }
 
-    public String getType() {
-        return type;
+    public String getTransactionType() {
+        return transactionType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public String getAccessType() {
+        return accessType;
+    }
+
+    public void setAccessType(String accessType) {
+        this.accessType = accessType;
     }
 
     public String getDeviceId() {
@@ -181,7 +192,8 @@ public class EventLog {
         return "EventLog{" +
                 "id='" + id + '\'' +
                 ", level='" + level + '\'' +
-                ", type='" + type + '\'' +
+                ", transactionType='" + transactionType + '\'' +
+                ", accessType='" + accessType + '\'' +
                 ", deviceId='" + deviceId + '\'' +
                 ", deviceUnit='" + deviceUnit + '\'' +
                 ", description='" + description + '\'' +

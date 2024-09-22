@@ -5,6 +5,7 @@ import com.cht.network.monitoring.dto.OperationTeamDto;
 import com.cht.network.monitoring.web.rest.vm.OperationTeamVM;
 import com.cht.network.monitoring.service.OperationTeamService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -16,21 +17,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "OperationTeamMaintenance", description = "維運團隊資料維護")
 @RestController
-@RequestMapping("operationTeam")
-public class OperationTeamResource {
+@RequestMapping("api/operationTeamMaintenance")
+public class OperationTeamMaintenanceResource {
 
-    private static final Logger log = LoggerFactory.getLogger(OperationTeamResource.class);
+    private static final Logger log = LoggerFactory.getLogger(OperationTeamMaintenanceResource.class);
 
     private final OperationTeamService operationTeamService;
 
-    public OperationTeamResource(OperationTeamService operationTeamService) {
+    public OperationTeamMaintenanceResource(OperationTeamService operationTeamService) {
         this.operationTeamService = operationTeamService;
     }
 
     @Operation(summary = "修改資產")
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<OperationTeamVM.FindOneRes> updateOperationTeam(@Valid @RequestBody OperationTeamVM.UpdateOneReq updateOneReq,
+    public @ResponseBody ResponseEntity<OperationTeamVM.FindOneRes> updateOperationTeamMaintenanceOperationTeam(@Valid @RequestBody OperationTeamVM.UpdateOneReq updateOneReq,
                                                                        HttpServletResponse response) {
 
         log.info("update {}", updateOneReq);
@@ -50,7 +52,7 @@ public class OperationTeamResource {
 
     @Operation(summary = "刪除資產")
     @PostMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<OperationTeamVM.FindOneRes> deleteOneOperationTeam(@Valid @RequestBody OperationTeamVM.DeleteOneReq deleteOneReq,
+    public @ResponseBody ResponseEntity<OperationTeamVM.FindOneRes> deleteOperationTeamMaintenanceOneOperationTeam(@Valid @RequestBody OperationTeamVM.DeleteOneReq deleteOneReq,
                                                                           HttpServletResponse response) {
 
         log.info("deleteOneReq {}", deleteOneReq);
@@ -59,9 +61,9 @@ public class OperationTeamResource {
         return ResponseEntity.ok().body(res);
     }
 
-    @Operation(summary = "取得資產")
+    @Operation(summary = "取得所有的資產")
     @PostMapping(value = "/find/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<OperationTeamVM.FindAllRes> findAllOperationTeam(@Valid @RequestBody OperationTeamVM.FindAllReq findAllReq,
+    public @ResponseBody ResponseEntity<OperationTeamVM.FindAllRes> findOperationTeamMaintenanceAllOperationTeam(@Valid @RequestBody OperationTeamVM.FindAllReq findAllReq,
                                                                            @ParameterObject Pageable page, HttpServletResponse response) {
         log.info("filter: {}, page: {}", findAllReq.getFilter(), page);
         Page<OperationTeamDto> findAllPage = operationTeamService.findAll(findAllReq.getFilter(), page);
@@ -70,9 +72,9 @@ public class OperationTeamResource {
         return ResponseEntity.ok().body(res);
     }
 
-    @Operation(summary = "取得資產")
+    @Operation(summary = "取得單一資產")
     @PostMapping(value = "/find/one", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<OperationTeamVM.FindOneRes> findOneOperationTeam(@Valid @RequestBody OperationTeamVM.FindOneReq findOneReq,
+    public @ResponseBody ResponseEntity<OperationTeamVM.FindOneRes> findOperationTeamMaintenanceOneOperationTeam(@Valid @RequestBody OperationTeamVM.FindOneReq findOneReq,
                                                                            HttpServletResponse response) {
 
         log.info("findOneRes {}", findOneReq.getId());

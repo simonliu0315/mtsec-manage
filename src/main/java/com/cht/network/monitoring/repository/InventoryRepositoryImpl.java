@@ -36,13 +36,13 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
     }
 
 
-    public Page<InventoryEventLogDto> getInventoryAndEventLog(String filter, String type,
+    public Page<InventoryEventLogDto> getInventoryAndEventLog(String filter, String transactionType,
                                                               Pageable pageable) {
         Query.Builder builder = Query.builder();
         builder.expandIterableParameters(true)
                 .append("SELECT A.*, ")
-                .append("IFNULL((select level from network.event_log")
-                .append("where device_id = A.id and closed_at is null and type= :type order by occurred_at desc limit 1),'Normal') as level", type)
+                .append("IFNULL((select level from event_log")
+                .append("where device_id = A.id and closed_at is null and transaction_type= :transactionType order by occurred_at desc limit 1),'Normal') as level", transactionType)
                 .append("FROM inventory A")
                 .append("where 1=1")
                 .appendWhen(StringUtils.isNotBlank(filter), "AND (A.device_name like :filter", "%" + filter + "%")
@@ -54,12 +54,12 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
 
     }
 
-    public List<EventLogCnt> findEventLogCnt(String filter, String type) {
+    public List<EventLogCnt> findEventLogCnt(String filter, String transactionType) {
         Query.Builder builder = Query.builder();
         builder.expandIterableParameters(false)
                 .append("select IFNULL(level, 'Normal') as level, count(*) as cnt from (")
-                .append("SELECT A.*, (select level from ")
-                .append("network.event_log where device_id = A.id and closed_at is null and type = :type", type)
+                .append("SELECT A.*, (select level ")
+                .append("from event_log where device_id = A.id and closed_at is null and transaction_type = :transactionType", transactionType)
                 .append("order by occurred_at desc limit 1) as level ")
                 .append("FROM network.inventory A ) as U group by level");
                 //.appendWhen(StringUtils.isNotBlank(filter), "AND (A.device_name like :filter", "%" + filter + "%")

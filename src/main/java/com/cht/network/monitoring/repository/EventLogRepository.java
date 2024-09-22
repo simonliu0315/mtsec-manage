@@ -13,6 +13,9 @@ import java.util.List;
 public interface EventLogRepository extends JpaRepository<EventLog, EventLogPK> {
 
 
+    public List<EventLog> findByDeviceIdAndAccessTypeAndTransactionTypeAndClosedAtIsNullOrderByCreatedAtDesc(String deviceId, String accessType, String transactionType);
 
-    public List<EventLog> findByDeviceIdAndTypeAndClosedAtIsNullOrderByCreatedAtDesc(String deviceId, String type);
+    public Page<EventLog> findByAccessTypeAndClosedAtIsNullOrderByCreatedAtDesc(String accessType, Pageable pageable);
+
+    public int countByLevelAndAccessTypeAndClosedAtIsNull(String level, String accessType);
 }
