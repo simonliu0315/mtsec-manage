@@ -39,6 +39,7 @@ public class InventoryService {
             inventoryDto.setDeviceName(inventory.getDeviceName());
             inventoryDto.setDeviceInterface(inventory.getDeviceInterface());
             inventoryDto.setInterfaceDescription(inventory.getInterfaceDescription());
+            inventoryDto.setUpdatedAt(inventory.getUpdatedAt());
             dtos.add(inventoryDto);
 
             log.info("{}", inventory);

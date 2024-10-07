@@ -13,7 +13,7 @@ import org.springframework.core.env.Environment;
 public class LoggingAspectConfiguration {
 
     @Bean
-    //@Profile({"dev", "default"})
+    @Profile({"dev", "default"})
     public LoggingAspect loggingAspect(Environment env) {
         return new LoggingAspect(env);
     }

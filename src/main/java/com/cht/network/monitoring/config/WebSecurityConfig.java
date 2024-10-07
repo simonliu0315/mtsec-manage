@@ -1,17 +1,23 @@
 package com.cht.network.monitoring.config;
 
 import com.cht.network.monitoring.config.properties.ChtCorsProperties;
+import com.cht.network.monitoring.config.properties.SecurityProperties;
+import com.cht.network.monitoring.security.SecurityFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,7 +30,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 //@EnableMethodSecurity
-@EnableConfigurationProperties({ChtCorsProperties.class})
+@EnableConfigurationProperties({SecurityProperties.class, ChtCorsProperties.class})
 public class WebSecurityConfig {
 
     private final Logger log = LoggerFactory.getLogger(WebSecurityConfig.class);
@@ -33,20 +39,31 @@ public class WebSecurityConfig {
 
     private final ChtCorsProperties corsProperties;
 
-    public WebSecurityConfig(CorsConfiguration corsConfiguration, ChtCorsProperties corsProperties) {
+    private final SecurityProperties securityProperties;
+
+    private final SecurityFilter securityFilter;
+
+    public WebSecurityConfig(CorsConfiguration corsConfiguration, ChtCorsProperties corsProperties,
+    SecurityProperties securityProperties, Environment env) {
         this.corsConfiguration = corsConfiguration;
         this.corsProperties = corsProperties;
+        this.securityProperties = securityProperties;
+        this.securityFilter = new SecurityFilter(securityProperties, env.acceptsProfiles("dev", "init-user"));
     }
 
+    /*
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {
         return new InMemoryUserDetailsManager(User.withUsername("TEST").password("{noop}12345").roles("USER").build());
     }
+    */
+    @ConditionalOnMissingBean
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("filterChain");
         http.cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 //.requestMatchers("/domesticCircuit/**").permitAll()

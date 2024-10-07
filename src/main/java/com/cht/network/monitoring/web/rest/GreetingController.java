@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,5 +28,15 @@ public class GreetingController {
         response.addHeader("Access-Control-Allow-Origin", "*");
         log.info("AAAAAAAAAAAAAAAAAAAAAA");
         return "greeting";
+    }
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/send")
+    public String sendMessage(@RequestParam("message") String message) {
+        kafkaTemplate.send("my-topic", message);
+        return "Message sent";
     }
 }

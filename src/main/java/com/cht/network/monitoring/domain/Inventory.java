@@ -2,6 +2,8 @@ package com.cht.network.monitoring.domain;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
 
 @Entity
 @Table(name = "inventory")
@@ -20,6 +22,18 @@ public class Inventory {
 
     @Column(name = "interface_description")
     private String interfaceDescription;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
 
     public String getId() {
         return id;
@@ -54,13 +68,49 @@ public class Inventory {
         this.interfaceDescription = interfaceDescription;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     @Override
     public String toString() {
         return "Inventory{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", deviceName='" + deviceName + '\'' +
                 ", deviceInterface='" + deviceInterface + '\'' +
                 ", interfaceDescription='" + interfaceDescription + '\'' +
+                ", createdAt=" + createdAt +
+                ", createdBy='" + createdBy + '\'' +
+                ", updatedAt=" + updatedAt +
+                ", updatedBy='" + updatedBy + '\'' +
                 '}';
     }
 }

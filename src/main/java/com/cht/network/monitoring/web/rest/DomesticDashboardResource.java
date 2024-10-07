@@ -4,6 +4,7 @@ package com.cht.network.monitoring.web.rest;
 import com.cht.network.monitoring.domain.EventLog;
 import com.cht.network.monitoring.dto.EventLogCnt;
 import com.cht.network.monitoring.dto.EventLogDto;
+import com.cht.network.monitoring.security.SecurityUtils;
 import com.cht.network.monitoring.service.DomesticCircuitService;
 import com.cht.network.monitoring.service.DomesticDashboardService;
 import com.cht.network.monitoring.web.rest.vm.DomesticCircuitVM;
@@ -42,6 +43,7 @@ public class DomesticDashboardResource {
                                                                                      HttpServletResponse response) {
 
         log.info("findEventReq {}  ", findEventReq.getFilter());
+        log.info("get User {}  ", SecurityUtils.getCurrentUser());
         Page<EventLog> eventLog = domesticDashboardService.getInnerEventLogsNotClosed(page);
         int criticalCnt = domesticDashboardService.getInnerEventLogsCount("Critical");
         int minorCnt = domesticDashboardService.getInnerEventLogsCount("Minor");
