@@ -54,23 +54,30 @@ public class TopologyService {
     public TopologyDto findOne(String id, String filter) {
         TopologyPK topologyPK = new TopologyPK();
         topologyPK.setId(id);
-        Topology topology = topologyRepository.findById(topologyPK).get();
-        TopologyDto dto = new TopologyDto();
-        dto.setId(id);
-        dto.setName(topology.getName());
-        dto.setConfigs(topology.getConfigs());
-        dto.setNodes(topology.getNodes());
-        dto.setEdges(topology.getEdges());
-        dto.setLayouts(topology.getLayouts());
-        dto.setCreatedAt(topology.getCreatedAt());
-        dto.setUpdatedAt(topology.getUpdatedAt());
-        return dto;
+        if (topologyRepository.findById(topologyPK).isPresent()) {
+            Topology topology = topologyRepository.findById(topologyPK).get();
+            TopologyDto dto = new TopologyDto();
+            dto.setId(id);
+            dto.setName(topology.getName());
+            dto.setConfigs(topology.getConfigs());
+            dto.setNodes(topology.getNodes());
+            dto.setEdges(topology.getEdges());
+            dto.setLayouts(topology.getLayouts());
+            dto.setCreatedAt(topology.getCreatedAt());
+            dto.setUpdatedAt(topology.getUpdatedAt());
+            return dto;
+        } else {
+            return  new TopologyDto();
+        }
+
     }
     public Topology save(String name, String configs, String nodes, String edges, String layouts) {
         Topology topology = topologyRepository.findByName(name);
         if (topology == null) {
             topology = new Topology();
             topology.setId(UUID.randomUUID().toString());
+            topology.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            topology.setCreatedBy("TEST");
         }
         log.info("configs {}, nodes {}, edges {}", configs.length(), nodes.length(), edges.length());
         topology.setName(name);
@@ -78,8 +85,6 @@ public class TopologyService {
         topology.setNodes(nodes);
         topology.setEdges(edges);
         topology.setLayouts(layouts);
-        topology.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        topology.setCreatedBy("TEST");
         topology.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         topology.setUpdatedBy("TEST");
         return topologyRepository.saveAndFlush(topology);
