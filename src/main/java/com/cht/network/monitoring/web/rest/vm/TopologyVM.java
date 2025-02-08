@@ -1,11 +1,15 @@
 package com.cht.network.monitoring.web.rest.vm;
 
+import com.cht.network.monitoring.domain.Inventory;
+import com.cht.network.monitoring.domain.InventoryInterface;
 import com.cht.network.monitoring.domain.OperationTeam;
 import com.cht.network.monitoring.domain.Topology;
 import com.cht.network.monitoring.dto.OperationTeamDto;
 import com.cht.network.monitoring.dto.TopologyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public class TopologyVM extends TopologyDto {
 
@@ -77,5 +81,32 @@ public class TopologyVM extends TopologyDto {
 
     public static class DeleteOneReq extends Topology {
 
+    }
+
+    public static class InventoryReq extends Inventory {
+
+    }
+
+    public static class InventoryResp extends Inventory {
+
+        private List<Inventory> inventories;
+
+        List<InventoryInterface> interfaces;
+
+        public List<Inventory> getInventories() {
+            return inventories;
+        }
+
+        public void setInventories(List<Inventory> inventories) {
+            this.inventories = inventories;
+        }
+
+        public List<InventoryInterface> getInterfaces() {
+            return interfaces;
+        }
+
+        public void setInterfaces(List<InventoryInterface> interfaces) {
+            this.interfaces = interfaces;
+        }
     }
 }

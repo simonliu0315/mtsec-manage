@@ -17,6 +17,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -28,6 +29,7 @@ import java.util.List;
 
 @Tag(name = "DomesticCircuit", description = "國內骨幹電路")
 @RestController
+@PreAuthorize("hasAnyAuthority('AUTH_DomesticCircuit')")
 @RequestMapping("api/domesticCircuit")
 public class DomesticCircuitResource {
 

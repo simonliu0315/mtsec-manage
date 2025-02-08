@@ -148,5 +148,15 @@ public class StatusCodes {
         return new StatusCode(new Localizable(holder, "APP-APP001W-0001-E"));
     }
 
+    /**
+     * Key {@code APP-APP001W-0001-S}: {@code 作業成功。}.
+     *
+     * @return
+     *     {@code 作業成功。}
+     */
+    public static StatusCode APP_APP001W_0002_I() {
+        return new StatusCode(new Localizable(holder, "APP-APP001W-0002-I"));
+    }
+
 
 }

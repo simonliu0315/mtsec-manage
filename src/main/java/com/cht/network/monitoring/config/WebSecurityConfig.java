@@ -3,6 +3,9 @@ package com.cht.network.monitoring.config;
 import com.cht.network.monitoring.config.properties.ChtCorsProperties;
 import com.cht.network.monitoring.config.properties.SecurityProperties;
 import com.cht.network.monitoring.security.SecurityFilter;
+import com.cht.network.monitoring.service.AuthenticationService;
+import com.cht.network.monitoring.service.JwtService;
+import com.cht.network.monitoring.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,6 +33,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 //@EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties({SecurityProperties.class, ChtCorsProperties.class})
 public class WebSecurityConfig {
 
@@ -43,12 +47,20 @@ public class WebSecurityConfig {
 
     private final SecurityFilter securityFilter;
 
+    private final JwtService jwtService;
+
+    private final UserService userService;
+
     public WebSecurityConfig(CorsConfiguration corsConfiguration, ChtCorsProperties corsProperties,
-    SecurityProperties securityProperties, Environment env) {
+                             SecurityProperties securityProperties, Environment env,
+                             JwtService jwtService, UserService userService) {
         this.corsConfiguration = corsConfiguration;
         this.corsProperties = corsProperties;
         this.securityProperties = securityProperties;
-        this.securityFilter = new SecurityFilter(securityProperties, env.acceptsProfiles("dev", "init-user"));
+        this.jwtService = jwtService;
+        this.userService = userService;
+        this.securityFilter = new SecurityFilter(securityProperties, env.matchesProfiles("dev", "init-user"),
+                jwtService, userService);
     }
 
     /*
@@ -59,7 +71,7 @@ public class WebSecurityConfig {
     */
     @ConditionalOnMissingBean
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("filterChain");
         http.cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
@@ -67,7 +79,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 //.requestMatchers("/domesticCircuit/**").permitAll()
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/common/**").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->

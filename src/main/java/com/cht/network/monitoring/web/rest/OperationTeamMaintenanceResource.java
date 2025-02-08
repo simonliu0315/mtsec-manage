@@ -2,6 +2,7 @@ package com.cht.network.monitoring.web.rest;
 
 import com.cht.network.monitoring.domain.OperationTeam;
 import com.cht.network.monitoring.dto.OperationTeamDto;
+import com.cht.network.monitoring.security.SecurityUtils;
 import com.cht.network.monitoring.web.rest.vm.OperationTeamVM;
 import com.cht.network.monitoring.service.OperationTeamService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,10 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "OperationTeamMaintenance", description = "維運團隊資料維護")
 @RestController
+@PreAuthorize("hasAnyAuthority('AUTH_OperationTeamMaintenance')")
 @RequestMapping("api/operationTeamMaintenance")
 public class OperationTeamMaintenanceResource {
 
@@ -66,6 +69,8 @@ public class OperationTeamMaintenanceResource {
     public @ResponseBody ResponseEntity<OperationTeamVM.FindAllRes> findOperationTeamMaintenanceAllOperationTeam(@Valid @RequestBody OperationTeamVM.FindAllReq findAllReq,
                                                                            @ParameterObject Pageable page, HttpServletResponse response) {
         log.info("filter: {}, page: {}", findAllReq.getFilter(), page);
+        log.info("---> {}", SecurityUtils.getCurrentUser());
+        log.info("---> {}", SecurityUtils.getAuthority());
         Page<OperationTeamDto> findAllPage = operationTeamService.findAll(findAllReq.getFilter(), page);
         OperationTeamVM.FindAllRes res = new OperationTeamVM.FindAllRes();
         res.setOperationTeamDto(findAllPage);

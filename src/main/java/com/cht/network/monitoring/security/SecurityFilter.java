@@ -1,6 +1,10 @@
 package com.cht.network.monitoring.security;
 
 import com.cht.network.monitoring.config.properties.SecurityProperties;
+import com.cht.network.monitoring.domain.User;
+import com.cht.network.monitoring.service.AuthenticationService;
+import com.cht.network.monitoring.service.JwtService;
+import com.cht.network.monitoring.service.UserService;
 import com.cht.network.monitoring.web.rest.vm.UserInfoVM;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,6 +13,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +25,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -38,30 +44,33 @@ public class SecurityFilter extends GenericFilterBean {
 
     public static final String BEARER = "Bearer";
 
-    public SecurityFilter(SecurityProperties securityProperties, boolean enableInitUser) {
+    private final JwtService jwtService;
+
+    private final UserService userService;
+
+    public SecurityFilter(SecurityProperties securityProperties, boolean enableInitUser,
+                          JwtService jwtService, UserService userService) {
 
         this.securityProperties = securityProperties;
         this.enableInitUser = enableInitUser;
+        this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
-        log.info("Start SecurityFilter.");
         String authorization = resolveAuthorization(servletRequest);
-        log.info("authorization {}.", authorization);
         if (StringUtils.hasText(authorization) && !isSelf(servletRequest)) {
             log.info("Security by Authorization({}).", authorization);
-            Authentication authentication = getAuthentication(authorization, ((HttpServletRequest) servletRequest).getHeader(HEADER_FORWARDED_IP));
+            AbstractAuthenticationToken authentication = getAuthentication(authorization, ((HttpServletRequest) servletRequest).getHeader(HEADER_FORWARDED_IP));
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } else if (enableInitUser && securityProperties.getInitUser() != null) {
             log.info("Security by init user.");
-            Authentication authentication = getAuthentication(securityProperties.getInitUser());
+            AbstractAuthenticationToken authentication = getAuthentication(securityProperties.getInitUser());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
@@ -72,26 +81,33 @@ public class SecurityFilter extends GenericFilterBean {
     private boolean isSelf(ServletRequest servletRequest) {
 
         String requestUri = ((HttpServletRequest) servletRequest).getRequestURI();
-        String serviceUri = "";
+        String serviceUri = "/login";
         boolean isSelf = requestUri.equals(serviceUri);
 
-        log.info("request URI: {}", requestUri);
-        log.info("service URI: {}", serviceUri);
-        log.info("isSelf: {}", isSelf);
-
+        log.info("request URI: {} , service URI: {}, isSelf: {}", requestUri, serviceUri, isSelf);
         return isSelf;
     }
 
-    private Authentication getAuthentication(String authorization, String forwardedIp) {
+    private AbstractAuthenticationToken getAuthentication(String authorization, String forwardedIp) {
 
+        log.info("authorization {}, forwardedIp {}",authorization, forwardedIp);
         try {
+            final String jwtToken = authorization.substring(7);;
+            String userId = jwtService.extractUserId(jwtToken);
+            //log.info("userId {}", userId);
             UserInfoVM userInfoVM = null;//cacheApi(forwardedIp).userInfo(authorization).blockOptional().orElseThrow();
+            //authenticationService.login()
             UserInfo userInfo = new UserInfo();
-            userInfo.setUserId("Chihyu");
+            userInfo.setUserId(userId);
             userInfo.setUserType("A");
             userInfo.setUid("T");
             userInfo.setCustomId("");
-            userInfo.setAuthorities(new ArrayList<>());
+            List<String> roleList = new ArrayList<>();
+            User user = userService.getUserInfo(userId);
+            userService.getRoleFunctionalByRole(user.getRole().name()).stream().forEach( role -> {
+                roleList.add(role.getRoleFunctional());
+            } );
+            userInfo.setAuthorities(roleList);
 
             log.trace("userInfoVM {}", userInfoVM);
             log.trace("userInfo {}", userInfo);
@@ -108,8 +124,8 @@ public class SecurityFilter extends GenericFilterBean {
         return null;
     }
 
-    private Authentication getAuthentication(UserInfo userInfo) {
-        log.debug("userInfo {}", userInfo);
+    private AbstractAuthenticationToken getAuthentication(UserInfo userInfo) {
+        log.info("userInfo {}", userInfo);
         Collection<? extends GrantedAuthority> authorities = userInfo.getAuthorities().stream().filter(auth -> !auth.trim().isEmpty()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         return new UsernamePasswordAuthenticationToken(userInfo, "init-user", authorities);
     }

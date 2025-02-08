@@ -10,6 +10,7 @@ import com.cht.network.monitoring.repository.TopologyRepository;
 import com.cht.network.monitoring.security.SecurityUtils;
 import com.cht.network.monitoring.security.UserInfo;
 import com.cht.network.monitoring.web.rest.vm.UserInfoVM;
+import jakarta.persistence.Column;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -63,6 +65,9 @@ public class TopologyService {
             dto.setNodes(topology.getNodes());
             dto.setEdges(topology.getEdges());
             dto.setLayouts(topology.getLayouts());
+            dto.setBackgroundImage(topology.getBackgroundImage());
+            dto.setBackgroundImageWidth(topology.getBackgroundImageWidth());
+            dto.setBackgroundImageHeight(topology.getBackgroundImageHeight());
             dto.setCreatedAt(topology.getCreatedAt());
             dto.setUpdatedAt(topology.getUpdatedAt());
             return dto;
@@ -85,6 +90,28 @@ public class TopologyService {
         topology.setNodes(nodes);
         topology.setEdges(edges);
         topology.setLayouts(layouts);
+        topology.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        topology.setUpdatedBy("TEST");
+        return topologyRepository.saveAndFlush(topology);
+    }
+
+    public Topology saveImage(String id, String backgroundImage, String backgroundImageWidth, String backgroundImageHeight) {
+        TopologyPK pk = new TopologyPK();
+        pk.setId(id);
+        Topology topology = null;
+        Optional<Topology> optionalTopology= topologyRepository.findById(pk);
+        if (optionalTopology.isEmpty()) {
+            topology = new Topology();
+            topology.setId(UUID.randomUUID().toString());
+            topology.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            topology.setCreatedBy("TEST");
+        } else {
+            topology = optionalTopology.get();
+        }
+        log.info("backgroundImage {}, backgroundImageWidth {}, backgroundImageHeight {}", backgroundImage, backgroundImageWidth, backgroundImageHeight);
+        topology.setBackgroundImage(backgroundImage);
+        topology.setBackgroundImageWidth(backgroundImageWidth);
+        topology.setBackgroundImageHeight(backgroundImageHeight);
         topology.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         topology.setUpdatedBy("TEST");
         return topologyRepository.saveAndFlush(topology);
